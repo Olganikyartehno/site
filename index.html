@@ -900,17 +900,28 @@
       var showcase = document.getElementById('showcase');
       if (!showcase) return;
 
+      var REPO = 'Olganikyartehno/site';
+      var BRANCH = 'main';
+
       var VIDEOS = [
-        { src: "Video/Аватар 1 без озвучки.mp4", title: "Аватар без озвучки", type: "Образовательный ролик" },
-        { src: "Video/17982225386186.mp4", title: "Проект 02", type: "Рекламный ролик" },
-        { src: "Video/6a807b6cecaf2a85bfe61629.mp4", title: "Проект 03", type: "Имиджевое видео" },
-        { src: "Video/Untitled video.mp4", title: "Проект 04", type: "Рекламный ролик" }
+        { file: "Аватар 1 без озвучки.mp4", title: "Аватар без озвучки", type: "Образовательный ролик" },
+        { file: "17982225386186.mp4", title: "Проект 02", type: "Рекламный ролик" },
+        { file: "6a807b6cecaf2a85bfe61629.mp4", title: "Проект 03", type: "Имиджевое видео" },
+        { file: "Untitled video.mp4", title: "Проект 04", type: "Рекламный ролик" }
       ];
+
+      function videoSrcs(file) {
+        var enc = encodeURIComponent(file);
+        return [
+          'https://cdn.jsdelivr.net/gh/' + REPO + '@' + BRANCH + '/' + enc,
+          'https://raw.githubusercontent.com/' + REPO + '/' + BRANCH + '/' + enc
+        ];
+      }
 
       if (VIDEOS.length === 0) {
         var empty = document.createElement('div');
         empty.className = 'video-card--empty';
-        empty.innerHTML = '<div><strong>Здесь появятся ваши проекты</strong>Положите видео в папку <code>Video</code> — и я добавлю их в галерею.</div>';
+        empty.innerHTML = '<div><strong>Здесь появятся ваши проекты</strong>Загрузите видео в репозиторий GitHub и добавьте их в список.</div>';
         showcase.appendChild(empty);
         return;
       }
@@ -918,8 +929,12 @@
       VIDEOS.forEach(function (v) {
         var card = document.createElement('div');
         card.className = 'video-card';
+        var sources = '';
+        videoSrcs(v.file).forEach(function (src) {
+          sources += '<source src="' + src + '" type="video/mp4">';
+        });
         card.innerHTML =
-          '<video src="' + v.src + '" preload="metadata" muted loop playsinline></video>' +
+          '<video preload="metadata" muted loop playsinline>' + sources + '</video>' +
           '<div class="video-card__play">' +
           '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' +
           '</div>' +
